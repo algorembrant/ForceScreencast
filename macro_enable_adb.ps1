@@ -29,7 +29,6 @@ Write-Host "Starting in 3 seconds... HANDS OFF!"
 Start-Sleep 3
 
 # 2. LAUNCH SCRCPY
-# Launch asynchronous, title helps us find it if needed, though we assume focus stays.
 $p = Start-Process -FilePath $scrcpyPath -ArgumentList "--otg -K -M --window-title 'ANDROID_RECOVERY'" -PassThru
 Write-Host "🚀 Scrcpy launched."
 Write-Host "⏳ Waiting 5 seconds for initialization..."
