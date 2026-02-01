@@ -29,18 +29,10 @@ You must change your phone's USB driver for the "Blind" tool to work.
 2.  **Edit Password**: Open `phone_password.txt` and make sure your PIN (`521452`) is correct. Save it.
 3.  Double-click **`run_macro.bat`**.
 
-**What happens next:**
+**What happens next (Automated):**
 1.  The script launches.
 2.  It opens a black window (This is the "OTG" controller).
 3.  It **Automatically Unlocks** your phone using the PIN in the text file.
-4.  **IT WILL PAUSE AND ASK YOU FOR HELP:**
-    *   It will ask you to press the **Windows Key** on your keyboard (or whatever key opens the Search bar on your specific phone).
-    *   *Do this manually.*
-    *   Then press **ENTER** in the black terminal window to tell the robot to continue.
-5.  **Robot takes over**:
-    *   It types "USB Debugging".
-    *   It presses Enter.
-    *   It toggles the switch and clicks "Allow".
 
 **Did it work?**
 *   **Yes**: You usually hear a "USB Connected" sound (different from charging sound).
