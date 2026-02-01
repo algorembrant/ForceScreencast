@@ -7,7 +7,7 @@ try {
     & $scrcpyPath --turn-screen-off --stay-awake
 }
 catch {
-    Write-Host "❌ Error running scrcpy at $scrcpyPath" -ForegroundColor Red
+    Write-Host "Error running scrcpy at $scrcpyPath" -ForegroundColor Red
     Write-Error $_
 }
 

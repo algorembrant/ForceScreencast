@@ -24,9 +24,9 @@ Write-Host "---------------------------------------------------"
 
 # 1. LAUNCH SCRCPY
 $p = Start-Process -FilePath $scrcpyPath -ArgumentList "--otg -K -M --window-title ANDROID_RECOVERY" -PassThru
-Write-Host "🚀 Scrcpy launched."
+Write-Host "Scrcpy launched."
 Write-Host "---------------------------------------------------"
-Write-Host "⚠️  MANUAL ACTIONS REQUIRED ⚠️" -ForegroundColor Yellow
+Write-Host "MANUAL ACTIONS REQUIRED" -ForegroundColor Yellow
 Write-Host "1. UNLOCK your phone (Space, Swipe, Password)."
 Write-Host "2. STAY ON THE HOME SCREEN."
 Write-Host "3. Click back on THIS window."
@@ -35,10 +35,10 @@ Write-Host "---------------------------------------------------"
 Read-Host
 
 # 2. DELAY & REFOCUS (CRITICAL)
-Write-Host "⏳ Waiting 3 seconds (Hands Off!)..."
+Write-Host "Waiting 3 seconds (Hands Off!)..."
 Start-Sleep 3
 
-Write-Host "🔄 Refocusing Android Window..."
+Write-Host "Refocusing Android Window..."
 $wshell.AppActivate("ANDROID_RECOVERY")
 Start-Sleep 1
 

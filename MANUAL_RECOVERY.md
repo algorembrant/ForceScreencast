@@ -1,13 +1,13 @@
-# 🕹️ Manual Android Recovery (Blind Mode)
+# Manual Android Recovery (Blind Mode)
 
 **Goal:** Manually navigate the phone using keyboard/mouse to enable USB Debugging.
 
-## 🛑 Step 1: Pre-requisites
+## Step 1: Pre-requisites
 1.  Ensure you have run **Zadig** and installed **WinUSB** driver (See Main Guide).
 2.  Double-click **`run_OTG.bat`**.
 3.  Focus on the black window.
 
-## 📝 Step 2: The Manual Steps
+## Step 2: The Manual Steps
 Follow these steps exactly (as defined by user):
 
 1.  **Wake Up**: Press **Space** key.
@@ -33,7 +33,7 @@ Method 2: **Notification Shade**
     *   (Find Developer Options > Scroll down > Toggle Switch > Confirm).
     *   *Remember: Right Arrow -> Enter to click "Allow" on popup.*
 
-## 🏁 Step 3: Finish
+## Step 3: Finish
 Once verified:
 1.  **Reset Drivers** (Uninstall device in Device Manager).
 2.  Run **`run_screencast.bat`**.

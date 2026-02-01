@@ -1,4 +1,4 @@
-# 📱 Ultimate Android Recovery Guide (Dead Screen)
+# Ultimate Android Recovery Guide (Dead Screen)
 
 **Goal:** View and control your phone on your PC.
 **Problem:** Screen is dead AND "USB Debugging" is off.
@@ -6,7 +6,7 @@
 
 ---
 
-## 🛑 PHASE 1: DRIVER SETUP (Crucial!)
+## PHASE 1: DRIVER SETUP (Crucial!)
 You must change your phone's USB driver for the "Blind" tool to work.
 
 1.  **Download Zadig**: [https://zadig.akeo.ie/](https://zadig.akeo.ie/)
@@ -24,7 +24,7 @@ You must change your phone's USB driver for the "Blind" tool to work.
 
 ---
 
-## 🤖 PHASE 2: RUN THE AUTOMATION (Hybrid)
+## PHASE 2: RUN THE AUTOMATION (Hybrid)
 1.  Double-click **`run_macro.bat`**.
 2.  **MANUAL PART**:
     *   The script will launch the window and **PAUSE**.
@@ -40,7 +40,7 @@ You must change your phone's USB driver for the "Blind" tool to work.
 
 ---
 
-## 🔄 PHASE 3: RESET DRIVERS (Required for Screencast!)
+## PHASE 3: RESET DRIVERS (Required for Screencast!)
 Now that USB Debugging is ON, we need to switch the driver BACK so the Screencast app can see the screen.
 
 1.  **Close** any running script windows.
@@ -48,7 +48,7 @@ Now that USB Debugging is ON, we need to switch the driver BACK so the Screencas
 3.  Locate your device:
     *   It will likely be under "Universal Serial Bus devices" (because we made it WinUSB).
 4.  **Right-Click** your device -> **Uninstall Device**.
-    *   ✅ Check the box **"Attempt to remove the driver for this device"**.
+    *   Check the box **"Attempt to remove the driver for this device"**.
     *   Click **Uninstall**.
 5.  **Unplug** your phone.
 6.  **Replug** your phone.
@@ -56,13 +56,13 @@ Now that USB Debugging is ON, we need to switch the driver BACK so the Screencas
 
 ---
 
-## 📺 PHASE 4: SCREENCAST
+## PHASE 4: SCREENCAST
 1.  Double-click **`run_screencast.bat`**.
-2.  You should see your screen! 🎉
+2.  You should see your screen!
 
 ---
 
-### ❓ FAQ
+### FAQ
 *   **Script types PIN but phone doesn't unlock?**
     *   Timing might be off. Try running it again.
     *   Or unlock manually before running the script.

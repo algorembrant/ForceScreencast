@@ -31,3 +31,7 @@ conditions:
 - dead phone, black screen (not broken) you cant see anything, the developer settings is off, the USB debugging is off, 
 
 not on yt toturials
+
+
+
+

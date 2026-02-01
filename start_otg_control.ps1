@@ -12,7 +12,7 @@ try {
     & $scrcpyPath --otg -K -M
 }
 catch {
-    Write-Host "❌ Error running scrcpy at $scrcpyPath" -ForegroundColor Red
+    Write-Host "Error running scrcpy at $scrcpyPath" -ForegroundColor Red
     Write-Error $_
 }
 
