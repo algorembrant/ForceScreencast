@@ -1,70 +1,80 @@
-# Android Control Recovery Guide (Dead Screen / No USB Debugging)
+# 📱 Ultimate Android Recovery Guide (Dead Screen)
 
-This guide helps you regain control of an Android phone when the screen is broken/dead AND USB debugging is disabled.
+**Goal:** View and control your phone on your PC.
+**Problem:** Screen is dead AND "USB Debugging" is off.
+**Solution:** We use a "Blind Automation" script to enable debugging, then switch to normal view.
 
-## 🚨 Prerequisites
-1.  **scrcpy (v2.0 or later)**:
-    *   **Configured Location**: The scripts are set to look in: `C:\Users\User\Desktop\scrcpy\scrcpy-win64-v3.3.4`
-    *   If you move this folder, you will need to edit the `.ps1` files to match the new location.
-2.  **USB Cable**: Connect your phone to the PC.
+---
 
-## 🛠️ Step 1: The "OTG" Mode Trick
-Since USB debugging is OFF, standard screencasting won't work. We use **OTG Mode**, which turns your computer into a physical keyboard/mouse for the phone.
+## 🛑 PHASE 1: DRIVER SETUP (Crucial!)
+You must change your phone's USB driver for the "Blind" tool to work.
 
-**IMPORTANT (Windows Users):**
-To use OTG mode on Windows, you often need to change the USB driver for the device to `WinUSB`.
-1.  Download **Zadig**: [https://zadig.akeo.ie/](https://zadig.akeo.ie/)
-2.  Open Zadig.
-3.  Tips -> **List All Devices**.
-4.  Select your phone from the dropdown (it might show as "Gadget Serial", "Samsung_Android", or similar).
-5.  Ensure the target driver (right side) is **WinUSB**.
-6.  Click **Replace Driver**.
-    *   *Note: This breaks normal file transfer/ADB access until you revert it, but we need it for OTG.*
+1.  **Download Zadig**: [https://zadig.akeo.ie/](https://zadig.akeo.ie/)
+2.  Connect your phone via USB.
+3.  Open **Zadig**.
+4.  Click **Options** -> **List All Devices**.
+5.  Select your phone in the dropdown.
+    *   *Name might be "Samsung", "Pixel", "Gadget Serial", or "Android".*
+6.  Look at the Driver box on the right.
+    *   **Goal**: Change it to **WinUSB**.
+    *   Click **Replace Driver** (or Install Driver).
+    *   *Wait for it to finish.*
 
-## 🚀 Step 2: The Easy Method (Automated)
-I have created "One-Click" tools for you. You do **not** need to use PowerShell or terminals manually.
+> **Status Check**: Now your computer can "talk" to the phone as a Keyboard/Mouse. It CANNOT do normal ADB/File Transfer yet.
 
-### Option A: The "Blind" Macro (Semi-Automatic)
-1.  Double-click **`run_macro.bat`**.
-2.  **Unlock Manually**: The script will launch scrcpy and then **PAUSE**.
-    *   Use your keyboard to wake the phone (`Space`) and type your PIN.
-    *   **Listen** for the unlock sound to be sure it is unlocked.
-3.  **Start Automation**:
-    *   Click back on the script window.
-    *   Press **ENTER**.
-4.  **HANDS OFF!**
-    *   The script will automatically focus the window.
-    *   It will search for "USB Debugging" and try to toggle it.
-    *   It will Click "Allow" on the popup.
+---
 
-### Option B: Manual Control via OTG
-If the macro fails (e.g. opens Google Assistant instead of Search):
-1.  Double-click **`run_OTG.bat`**.
-2.  A window will open capturing your keyboard/mouse.
-3.  Follow **Step 3: Manual Navigation** below.
+## 🤖 PHASE 2: RUN THE AUTOMATION
+1.  Open the folder: `C:\Users\User\Desktop\VSCode\ForceScreencast`
+2.  **Edit Password**: Open `phone_password.txt` and make sure your PIN (`521452`) is correct. Save it.
+3.  Double-click **`run_macro.bat`**.
 
-## 🕹️ Step 3: Manual Navigation (Fallback)
-If Option A failed, use Option B to control the phone manually.
-1.  **Unlock**: Press `Space` to wake. Type PIN. Press `Enter`.
-2.  **Go to Settings**:
-    *   Try `Win+N` (Notifications) -> Arrow Keys -> Gear Icon.
-    *   OR: `Win` key -> Type "Settings" -> Enter.
-3.  **Enable USB Debugging**:
-    *   Navigate to **Settings -> System -> Developer Options**.
-    *   Find **USB Debugging** (scroll down).
-    *   Press `Enter` to toggle.
-    *   **Crucial**: Press `Right Arrow` -> `Enter` to click "Allow" on the blind popup.
+**What happens next:**
+1.  The script launches.
+2.  It opens a black window (This is the "OTG" controller).
+3.  It **Automatically Unlocks** your phone using the PIN in the text file.
+4.  **IT WILL PAUSE AND ASK YOU FOR HELP:**
+    *   It will ask you to press the **Windows Key** on your keyboard (or whatever key opens the Search bar on your specific phone).
+    *   *Do this manually.*
+    *   Then press **ENTER** in the black terminal window to tell the robot to continue.
+5.  **Robot takes over**:
+    *   It types "USB Debugging".
+    *   It presses Enter.
+    *   It toggles the switch and clicks "Allow".
 
-## 🎉 Step 4: Screencast
-Once USB Debugging is ON:
+**Did it work?**
+*   **Yes**: You usually hear a "USB Connected" sound (different from charging sound).
+*   **No**: Running it again? Make sure to close the black window first.
+
+---
+
+## 🔄 PHASE 3: RESET DRIVERS (Required for Screencast!)
+Now that USB Debugging is ON, we need to switch the driver BACK so the Screencast app can see the screen.
+
+1.  **Close** any running script windows.
+2.  Open **Device Manager** on your PC (Right-click Start -> Device Manager).
+3.  Locate your device:
+    *   It will likely be under "Universal Serial Bus devices" (because we made it WinUSB).
+4.  **Right-Click** your device -> **Uninstall Device**.
+    *   ✅ Check the box **"Attempt to remove the driver for this device"**.
+    *   Click **Uninstall**.
+5.  **Unplug** your phone.
+6.  **Replug** your phone.
+    *   Windows should automatically reinstall the "Original" driver (MTP/ADB).
+
+---
+
+## 📺 PHASE 4: SCREENCAST
 1.  Double-click **`run_screencast.bat`**.
-2.  You should see your screen!
+2.  You should see your screen! 🎉
 
-## 🆘 Troubleshooting
-*   **"USB device not found"**:
-    *   You likely need the **WinUSB** driver.
-    *   Open **Zadig**, Select device -> Replace driver with `WinUSB`.
-    *   See "Step 1" section above for details.
-*   **VS Code Errors**:
-    *   Do NOT run `.ps1` files inside VS Code.
-    *   Always double-click the `.bat` files in File Explorer.
+---
+
+### ❓ FAQ
+*   **Script types PIN but phone doesn't unlock?**
+    *   Timing might be off. Try running it again.
+    *   Or unlock manually before running the script.
+*   **"USB Device not found" in Phase 2?**
+    *   You didn't do Phase 1 (Zadig) correctly.
+*   **"Device Unauthorized" in Phase 4?**
+    *   The robot failed to click "Allow". You might need to try the automation again (Remember to switch drivers back to WinUSB first!).

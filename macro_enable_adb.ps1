@@ -1,80 +1,101 @@
-# AUTOMATED BLIND NAVIGATION MACRO (SEMI-AUTO)
-# 1. Launches scrcpy.
-# 2. Lets usually unlock manually.
-# 3. Refocuses window and runs navigation macro.
+# AUTOMATED BLIND NAVIGATION MACRO (FULL AUTO)
+# Reads PIN from phone_password.txt
 
+$scriptPath = $MyInvocation.MyCommand.Path
+$dir = Split-Path $scriptPath
+$pinFile = Join-Path $dir "phone_password.txt"
 $scrcpyPath = "C:\Users\User\Desktop\scrcpy\scrcpy-win64-v3.3.4\scrcpy.exe"
 $wshell = New-Object -ComObject WScript.Shell
 
-Write-Host "🤖 ANDROID RECOVERY ASSISTANT" -ForegroundColor Cyan
+Write-Host "🤖 ANDROID RECOVERY - FULL AUTOMATION" -ForegroundColor Cyan
 Write-Host "---------------------------------------------------"
-Write-Host "STEP 1: LAUNCH & UNLOCK"
-Write-Host "I will launch the scrcpy window for you."
-Write-Host "Please use your keyboard/mouse to UNLOCK the phone manually."
-Write-Host "(Listen for the unlock sound to confirm!)"
-Write-Host "---------------------------------------------------"
-Write-Host "Press ENTER to launch scrcpy..."
-Read-Host
 
-# Launch scrcpy asynchronously
-$p = Start-Process -FilePath $scrcpyPath -ArgumentList "--otg -K -M --window-title 'ANDROID_RECOVERY'" -PassThru
-Write-Host "🚀 Scrcpy launched."
-Write-Host "--> Please UNLOCK your phone now."
-Write-Host "--> When unlocked, click back on THIS window and Press ENTER."
-Read-Host
-
-# --- SEQUENCE START ---
-Write-Host "STEP 2: AUTOMATION STARTING"
-Write-Host "Attempting to refocus 'ANDROID_RECOVERY' window..."
-
-# Try to switch focus to scrcpy
-$focusSuccess = $wshell.AppActivate("ANDROID_RECOVERY")
-if (-not $focusSuccess) {
-    Write-Host "⚠️  Could not find window 'ANDROID_RECOVERY'. Trying generic..."
-    $wshell.AppActivate("scrcpy")
+# 1. READ PASSWORD
+if (Test-Path $pinFile) {
+    $pin = Get-Content $pinFile | ForEach-Object { $_.Trim() }
+    Write-Host "🔑 Loaded PIN from file: $pin" -ForegroundColor Green
+}
+else {
+    Write-Host "❌ phone_password.txt not found!" -ForegroundColor Red
+    $pin = Read-Host "Enter PIN manually"
 }
 
-Write-Host "Starting navigation macros in 2 seconds..."
-Write-Host "HANDS OFF!" -ForegroundColor Red
+Write-Host "---------------------------------------------------"
+Write-Host "PREPARE YOUR PHONE:"
+Write-Host "1. Connect USB Cable."
+Write-Host "2. Ensure Zadig 'WinUSB' driver is installed (See Guide)."
+Write-Host "---------------------------------------------------"
+Write-Host "Starting in 3 seconds... HANDS OFF!" 
+Start-Sleep 3
+
+# 2. LAUNCH SCRCPY
+# Launch asynchronous, title helps us find it if needed, though we assume focus stays.
+$p = Start-Process -FilePath $scrcpyPath -ArgumentList "--otg -K -M --window-title 'ANDROID_RECOVERY'" -PassThru
+Write-Host "🚀 Scrcpy launched."
+Write-Host "⏳ Waiting 5 seconds for initialization..."
+Start-Sleep 5
+
+# Refocus logic just in case
+$wshell.AppActivate("ANDROID_RECOVERY")
+Start-Sleep 1
+
+# 3. WAKE & UNLOCK
+Write-Host "🔓 EXECUTE: Unlock Sequence"
+Write-Host "   -> Sending SPACE (Wake)"
+$wshell.SendKeys(" ")
+Start-Sleep 1
+$wshell.SendKeys(" ") # Double tap to be safe
+Start-Sleep 1
+
+Write-Host "   -> Sending PIN ($pin)"
+$wshell.SendKeys($pin)
+Start-Sleep 1
+
+Write-Host "   -> Sending ENTER (Confirm PIN)"
+$wshell.SendKeys("{ENTER}")
 Start-Sleep 2
 
-# 3. TRIGGER SEARCH (The magic step)
-Write-Host "Sending: Go Home & Search..."
-$wshell.SendKeys("^{ESC}") # Go Home
-Start-Sleep 1
-$wshell.SendKeys("^{ESC}") # Ensure Home
-Start-Sleep 1
+# 4. MANUAL INTERVENTION (THE SEARCH BAR)
+Write-Host "---------------------------------------------------"
+Write-Host "⚠️  MANUAL STEP REQUIRED ⚠️" -ForegroundColor Yellow
+Write-Host "The script cannot reliably press the 'Windows/Search' key."
+Write-Host "1. Look at your phone (or listen)."
+Write-Host "2. Press your keyboard's WINDOWS KEY (or click mouse) to open the App Drawer/Search."
+Write-Host "3. IMMEDIATELY press ENTER in THIS terminal window to continue."
+Write-Host "---------------------------------------------------"
+Read-Host
 
-# Search
-Write-Host "Typing: 'USB Debugging'..."
+# 5. AUTOMATED CONFIGURATION
+Write-Host "⏳ Resuming Automation in 2 seconds..."
+$wshell.AppActivate("ANDROID_RECOVERY")
+Start-Sleep 2
+
+Write-Host "🔍 EXECUTE: Search & Enable"
+Write-Host "   -> Typing 'USB Debugging'"
 $wshell.SendKeys("USB Debugging")
 Start-Sleep 2
 
-# Select first result
-Write-Host "Selecting Result..."
+Write-Host "   -> Selecting first result (DOWN -> ENTER)"
 $wshell.SendKeys("{DOWN}")
 Start-Sleep 1
 $wshell.SendKeys("{ENTER}")
-Start-Sleep 3 # Wait for settings to open
+Start-Sleep 3
 
-# 4. TOGGLE
-Write-Host "Attempting Toggle (Enter)"
+Write-Host "   -> Toggling Switch (ENTER)"
 $wshell.SendKeys("{ENTER}")
 Start-Sleep 1
 
-# 5. AUTHORIZE POPUP (Right -> Enter)
-Write-Host "Authorizing Popup (Right -> Enter)"
+Write-Host "   -> Handling 'Allow?' Popup (RIGHT -> ENTER)"
 $wshell.SendKeys("{RIGHT}")
 Start-Sleep -Milliseconds 500
 $wshell.SendKeys("{ENTER}")
 
-# 6. ALTERNATE AUTHORIZE (Tab -> Enter)
+# Backup attempt for popup
 Start-Sleep 1
-Write-Host "Trying Alternate Auth (Tab -> Enter)"
 $wshell.SendKeys("{TAB}")
 Start-Sleep -Milliseconds 500
 $wshell.SendKeys("{ENTER}")
 
-Write-Host "✅ Macro Finished."
-Write-Host "Check if 'run_screencast.bat' works now!"
+Write-Host "✅ DONE. If you heard a 'USB Connect' sound, it worked."
+Write-Host "Check RECOVERY_GUIDE.md for 'How to Reset Drivers'!"
 Start-Sleep 5
