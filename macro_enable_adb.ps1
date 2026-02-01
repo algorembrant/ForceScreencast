@@ -10,13 +10,23 @@ $wshell = New-Object -ComObject WScript.Shell
 Write-Host "🤖 ANDROID RECOVERY - FULL AUTOMATION" -ForegroundColor Cyan
 Write-Host "---------------------------------------------------"
 
-# 1. READ PASSWORD
-if (Test-Path $pinFile) {
-    $pin = Get-Content $pinFile | ForEach-Object { $_.Trim() }
-    Write-Host "🔑 Loaded PIN from file: $pin" -ForegroundColor Green
+# 1. READ PASSWORD (Simplified Logic)
+$pin = ""
+$hasFile = Test-Path $pinFile
+
+if ($hasFile) {
+    try {
+        $rawPin = Get-Content $pinFile
+        $pin = "$rawPin".Trim()
+        Write-Host "🔑 Loaded PIN from file: $pin" -ForegroundColor Green
+    }
+    catch {
+        Write-Host "⚠️ Error reading PIN file." -ForegroundColor Yellow
+    }
 }
-else {
-    Write-Host "❌ phone_password.txt not found!" -ForegroundColor Red
+
+if ($pin.Length -eq 0) {
+    Write-Host "❌ phone_password.txt not found or empty!" -ForegroundColor Red
     $pin = Read-Host "Enter PIN manually"
 }
 
@@ -43,7 +53,7 @@ Write-Host "🔓 EXECUTE: Unlock Sequence"
 Write-Host "   -> Sending SPACE (Wake)"
 $wshell.SendKeys(" ")
 Start-Sleep 1
-$wshell.SendKeys(" ") # Double tap to be safe
+$wshell.SendKeys(" ")
 Start-Sleep 1
 
 Write-Host "   -> Sending PIN ($pin)"
@@ -54,13 +64,12 @@ Write-Host "   -> Sending ENTER (Confirm PIN)"
 $wshell.SendKeys("{ENTER}")
 Start-Sleep 2
 
-# 4. MANUAL INTERVENTION (THE SEARCH BAR)
+# 4. MANUAL INTERVENTION
 Write-Host "---------------------------------------------------"
 Write-Host "⚠️  MANUAL STEP REQUIRED ⚠️" -ForegroundColor Yellow
-Write-Host "The script cannot reliably press the 'Windows/Search' key."
-Write-Host "1. Look at your phone (or listen)."
-Write-Host "2. Press your keyboard's WINDOWS KEY (or click mouse) to open the App Drawer/Search."
-Write-Host "3. IMMEDIATELY press ENTER in THIS terminal window to continue."
+Write-Host "1. Look at your phone."
+Write-Host "2. Press your keys to open Search/App Drawer (Manual Windows Key)."
+Write-Host "3. IMMEDIATELY press ENTER here to continue."
 Write-Host "---------------------------------------------------"
 Read-Host
 
