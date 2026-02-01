@@ -24,14 +24,18 @@ To use OTG mode on Windows, you often need to change the USB driver for the devi
 ## 🚀 Step 2: The Easy Method (Automated)
 I have created "One-Click" tools for you. You do **not** need to use PowerShell or terminals manually.
 
-### Option A: The "Blind" Macro (Try this first!)
+### Option A: The "Blind" Macro (Semi-Automatic)
 1.  Double-click **`run_macro.bat`**.
-2.  Enter your PIN if asked.
-3.  **HANDS OFF!**
-    *   The script will launch scrcpy in OTG mode.
-    *   It will automatically press `Win` key, search for "USB Debugging", and try to turn it on.
-    *   It will try to click "Allow" on the popup.
-4.  If you hear a "USB Connected" sound, it worked! Proceed to Step 4.
+2.  **Unlock Manually**: The script will launch scrcpy and then **PAUSE**.
+    *   Use your keyboard to wake the phone (`Space`) and type your PIN.
+    *   **Listen** for the unlock sound to be sure it is unlocked.
+3.  **Start Automation**:
+    *   Click back on the script window.
+    *   Press **ENTER**.
+4.  **HANDS OFF!**
+    *   The script will automatically focus the window.
+    *   It will search for "USB Debugging" and try to toggle it.
+    *   It will Click "Allow" on the popup.
 
 ### Option B: Manual Control via OTG
 If the macro fails (e.g. opens Google Assistant instead of Search):

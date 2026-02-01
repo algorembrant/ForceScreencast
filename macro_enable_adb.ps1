@@ -1,65 +1,52 @@
-# AUTOMATED BLIND NAVIGATION MACRO
-# Tries to enable USB Debugging using "Search" instead of blind scrolling.
+# AUTOMATED BLIND NAVIGATION MACRO (SEMI-AUTO)
+# 1. Launches scrcpy.
+# 2. Lets usually unlock manually.
+# 3. Refocuses window and runs navigation macro.
 
 $scrcpyPath = "C:\Users\User\Desktop\scrcpy\scrcpy-win64-v3.3.4\scrcpy.exe"
 $wshell = New-Object -ComObject WScript.Shell
 
-Write-Host "🤖 AUTO-NAVIGATION MACRO" -ForegroundColor Cyan
-Write-Host "This script will: "
-Write-Host "1. Launch scrcpy (OTG)."
-Write-Host "2. Wait 5 seconds."
-Write-Host "3. Type your PIN to unlock."
-Write-Host "4. Search for 'USB Debugging' and try to enable it."
+Write-Host "🤖 ANDROID RECOVERY ASSISTANT" -ForegroundColor Cyan
 Write-Host "---------------------------------------------------"
-
-$pin = Read-Host "Enter your PIN (leave empty if none)"
+Write-Host "STEP 1: LAUNCH & UNLOCK"
+Write-Host "I will launch the scrcpy window for you."
+Write-Host "Please use your keyboard/mouse to UNLOCK the phone manually."
+Write-Host "(Listen for the unlock sound to confirm!)"
 Write-Host "---------------------------------------------------"
-Write-Host "🛑 HANDS OFF THE KEYBOARD ONCE STARTED!" -ForegroundColor Red
-Write-Host "Starting in 3..."
-Start-Sleep 1
-Write-Host "2..."
-Start-Sleep 1
-Write-Host "1..."
-Start-Sleep 1
+Write-Host "Press ENTER to launch scrcpy..."
+Read-Host
 
 # Launch scrcpy asynchronously
-$p = Start-Process -FilePath $scrcpyPath -ArgumentList "--otg -K -M" -PassThru
-Write-Host "🚀 Scrcpy launched. Initializing..."
-Start-Sleep 5
+$p = Start-Process -FilePath $scrcpyPath -ArgumentList "--otg -K -M --window-title 'ANDROID_RECOVERY'" -PassThru
+Write-Host "🚀 Scrcpy launched."
+Write-Host "--> Please UNLOCK your phone now."
+Write-Host "--> When unlocked, click back on THIS window and Press ENTER."
+Read-Host
 
 # --- SEQUENCE START ---
+Write-Host "STEP 2: AUTOMATION STARTING"
+Write-Host "Attempting to refocus 'ANDROID_RECOVERY' window..."
 
-# 1. WAKE UP
-Write-Host "Sending: Wake (Space)"
-$wshell.SendKeys(" ")
-Start-Sleep -Milliseconds 500
-$wshell.SendKeys(" ") # Double tap space just in case
-Start-Sleep 1
-
-# 2. UNLOCK
-if ($pin) {
-    Write-Host "Sending: Swipe Up + PIN"
-    # Some phones need a modifier to "Swipe" or just typing works
-    # Helper: Win+B (Back) closes lock screen notifications?
-    # Try typing PIN directly
-    $wshell.SendKeys($pin)
-    Start-Sleep -Milliseconds 500
-    $wshell.SendKeys("{ENTER}")
-    Start-Sleep 2
+# Try to switch focus to scrcpy
+$focusSuccess = $wshell.AppActivate("ANDROID_RECOVERY")
+if (-not $focusSuccess) {
+    Write-Host "⚠️  Could not find window 'ANDROID_RECOVERY'. Trying generic..."
+    $wshell.AppActivate("scrcpy")
 }
 
+Write-Host "Starting navigation macros in 2 seconds..."
+Write-Host "HANDS OFF!" -ForegroundColor Red
+Start-Sleep 2
+
 # 3. TRIGGER SEARCH (The magic step)
-Write-Host "Sending: Search Trigger (Win Key)"
-# '^{ESC}' is Ctrl+Esc which sends Start Menu in Windows, usually triggers Home/Menu on Android
-# scrcpy maps Left Win to APP_SWITCH or SEARCH depending on config.
-# Let's try sending text directly assuming we are at Home.
-$wshell.SendKeys("^{ESC}") # Go Home?
+Write-Host "Sending: Go Home & Search..."
+$wshell.SendKeys("^{ESC}") # Go Home
 Start-Sleep 1
 $wshell.SendKeys("^{ESC}") # Ensure Home
 Start-Sleep 1
 
-# On many Androids, just typing searches Apps
-Write-Host "Searching: 'USB Debugging'"
+# Search
+Write-Host "Typing: 'USB Debugging'..."
 $wshell.SendKeys("USB Debugging")
 Start-Sleep 2
 
