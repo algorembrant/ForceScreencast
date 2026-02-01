@@ -1,21 +1,23 @@
 # Check if scrcpy and adb are available
 Write-Host "Checking requirements..." -ForegroundColor Cyan
 
-$scrcpy = Get-Command scrcpy -ErrorAction SilentlyContinue
-$adb = Get-Command adb -ErrorAction SilentlyContinue
+$scrcpyBaseDir = "C:\Users\User\Desktop\scrcpy\scrcpy-win64-v3.3.4"
+$scrcpyExe = "$scrcpyBaseDir\scrcpy.exe"
+$adbExe = "$scrcpyBaseDir\adb.exe"
 
-if ($scrcpy) {
-    Write-Host "✅ scrcpy found at: $($scrcpy.Source)" -ForegroundColor Green
-} else {
-    Write-Host "❌ scrcpy NOT found in PATH." -ForegroundColor Red
-    Write-Host "   Please download it from: https://github.com/Genymobile/scrcpy/releases"
-    Write-Host "   Extract it and place these scripts inside the scrcpy folder, or add it to specific PATH."
+if (Test-Path $scrcpyExe) {
+    Write-Host "✅ scrcpy found at: $scrcpyExe" -ForegroundColor Green
+}
+else {
+    Write-Host "❌ scrcpy NOT found at: $scrcpyExe" -ForegroundColor Red
+    Write-Host "   Please check the path."
 }
 
-if ($adb) {
-    Write-Host "✅ adb found at: $($adb.Source)" -ForegroundColor Green
-} else {
-    Write-Host "⚠️  adb NOT found (usually comes with scrcpy)." -ForegroundColor Yellow
+if (Test-Path $adbExe) {
+    Write-Host "✅ adb found at: $adbExe" -ForegroundColor Green
+}
+else {
+    Write-Host "⚠️  adb NOT found at: $adbExe (usually comes with scrcpy)." -ForegroundColor Yellow
 }
 
 Write-Host "`nPress Enter to exit..."

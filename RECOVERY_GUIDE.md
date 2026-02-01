@@ -3,10 +3,9 @@
 This guide helps you regain control of an Android phone when the screen is broken/dead AND USB debugging is disabled.
 
 ## 🚨 Prerequisites
-1.  **scrcpy (v2.0 or later)**: You must have `scrcpy` installed.
-    *   Download: [https://github.com/Genymobile/scrcpy/releases](https://github.com/Genymobile/scrcpy/releases)
-    *   Extract it to a folder (e.g., `C:\scrcpy`).
-    *   Add that folder to your System PATH or copy these scripts into that folder.
+1.  **scrcpy (v2.0 or later)**:
+    *   **Configured Location**: The scripts are set to look in: `C:\Users\User\Desktop\scrcpy\scrcpy-win64-v3.3.4`
+    *   If you move this folder, you will need to edit the `.ps1` files to match the new location.
 2.  **USB Cable**: Connect your phone to the PC.
 
 ## 🛠️ Step 1: The "OTG" Mode Trick

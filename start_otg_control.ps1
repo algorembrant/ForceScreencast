@@ -4,13 +4,15 @@ Write-Host "NOTE: You may need to use Zadig to replace the USB driver with WinUS
 Write-Host "Waiting 3 seconds..."
 Start-Sleep -Seconds 3
 
+$scrcpyPath = "C:\Users\User\Desktop\scrcpy\scrcpy-win64-v3.3.4\scrcpy.exe"
+
 # Try to run scrcpy with OTG arguments
 # -K = HID keyboard, -M = HID mouse
-# We use Invoke-Expression to handle potential path issues if run from within the folder
 try {
-    & scrcpy --otg -K -M
-} catch {
-    Write-Host "❌ Error running scrcpy. Make sure it is installed and in your PATH." -ForegroundColor Red
+    & $scrcpyPath --otg -K -M
+}
+catch {
+    Write-Host "❌ Error running scrcpy at $scrcpyPath" -ForegroundColor Red
     Write-Error $_
 }
 
