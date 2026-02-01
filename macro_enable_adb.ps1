@@ -1,107 +1,132 @@
-# AUTOMATED BLIND NAVIGATION MACRO (FULL AUTO)
-# Reads PIN from phone_password.txt
+# AUTOMATED BLIND NAVIGATION MACRO (HYBRID - AUTO SETTINGS)
+# User: Unlocks Manually -> Presses Enter
+# Script: Finds Settings (Swipe Up -> Type) -> Enables Debugging
 
-$scriptPath = $MyInvocation.MyCommand.Path
-$dir = Split-Path $scriptPath
-$pinFile = Join-Path $dir "phone_password.txt"
+# C# definition for Mouse Actions (Swipe Up)
+$code = @"
+    [DllImport("user32.dll")]
+    public static extern void mouse_event(int dwFlags, int dx, int dy, int dwData, int dwExtraInfo);
+    public const int MOUSEEVENTF_LEFTDOWN = 0x02;
+    public const int MOUSEEVENTF_LEFTUP = 0x04;
+    public const int MOUSEEVENTF_MOVE = 0x01;
+"@
+Add-Type -MemberDefinition $code -Name Win32 -Namespace User32
+
 $scrcpyPath = "C:\Users\User\Desktop\scrcpy\scrcpy-win64-v3.3.4\scrcpy.exe"
 $wshell = New-Object -ComObject WScript.Shell
 
-Write-Host "ANDROID RECOVERY - FULL AUTOMATION" -ForegroundColor Cyan
+Write-Host "ANDROID RECOVERY - AUTO SETTINGS FINDER" -ForegroundColor Cyan
+Write-Host "---------------------------------------------------"
+Write-Host "1. I will launch scrcpy."
+Write-Host "2. YOU unlock the phone manually."
+Write-Host "3. I will Find Settings and Enable Debugging."
 Write-Host "---------------------------------------------------"
 
-# 1. READ PASSWORD
-$pin = ""
-if (Test-Path $pinFile) {
-    $pin = Get-Content $pinFile
-    Write-Host "Loaded PIN from file." -ForegroundColor Green
-}
-
-if ($pin -eq $null) {
-    Write-Host "phone_password.txt not found or empty!" -ForegroundColor Red
-    $pin = Read-Host "Enter PIN manually"
-}
-
+# 1. LAUNCH SCRCPY
+$p = Start-Process -FilePath $scrcpyPath -ArgumentList "--otg -K -M --window-title ANDROID_RECOVERY" -PassThru
+Write-Host "🚀 Scrcpy launched."
 Write-Host "---------------------------------------------------"
-Write-Host "PREPARE YOUR PHONE:"
-Write-Host "1. Connect USB Cable."
-Write-Host "2. Ensure Zadig WinUSB driver is installed."
+Write-Host "⚠️  MANUAL ACTIONS REQUIRED ⚠️" -ForegroundColor Yellow
+Write-Host "1. UNLOCK your phone (Space, Swipe, Password)."
+Write-Host "2. STAY ON THE HOME SCREEN."
+Write-Host "3. Click back on THIS window."
+Write-Host "4. Press ENTER (Twice if needed) to start automation."
 Write-Host "---------------------------------------------------"
-Write-Host "Starting in 3 seconds... HANDS OFF!" 
+Read-Host
+
+# 2. DELAY & REFOCUS (CRITICAL)
+Write-Host "⏳ Waiting 3 seconds (Hands Off!)..."
 Start-Sleep 3
 
-# 2. LAUNCH SCRCPY
-$p = Start-Process -FilePath $scrcpyPath -ArgumentList "--otg -K -M --window-title ANDROID_RECOVERY" -PassThru
-Write-Host "Scrcpy launched."
-Write-Host "Waiting 5 seconds for initialization..."
-Start-Sleep 5
-
-# Refocus logic
+Write-Host "🔄 Refocusing Android Window..."
 $wshell.AppActivate("ANDROID_RECOVERY")
 Start-Sleep 1
 
-# 3. WAKE & UNLOCK
-Write-Host "EXECUTE: Unlock Sequence"
-Write-Host "   -> Sending SPACE (Wake)"
-$wshell.SendKeys(" ")
-Start-Sleep 1
-$wshell.SendKeys(" ")
+# 3. FIND SETTINGS (App Drawer Strategy)
+Write-Host "EXECUTE: Find Settings App"
+# Clear screen/Go Home
+Write-Host "   -> Sending ESC (Back) to clear screen"
+$wshell.SendKeys("{ESC}") 
+Start-Sleep -Milliseconds 500
+$wshell.SendKeys("{ESC}") 
+
+# Swipe Up (Open App Drawer)
+Write-Host "   -> Swiping Up to Open App Drawer (Mouse)"
+[User32.Win32]::mouse_event(0x02, 0, 0, 0, 0) # Down
+Start-Sleep -Milliseconds 100
+for ($i = 0; $i -lt 20; $i++) {
+    [User32.Win32]::mouse_event(0x01, 0, -20, 0, 0) # Move Up
+    Start-Sleep -Milliseconds 10
+}
+[User32.Win32]::mouse_event(0x04, 0, 0, 0, 0) # Up
 Start-Sleep 1
 
-Write-Host "   -> Sending PIN"
-$wshell.SendKeys($pin)
-Start-Sleep 1
-
-Write-Host "   -> Sending ENTER (Confirm PIN)"
-$wshell.SendKeys("{ENTER}")
+# Type "Settings"
+Write-Host "   -> Typing 'Settings'"
+$wshell.SendKeys("Settings")
 Start-Sleep 2
 
-# 4. OPEN APP DRAWER (AUTO-SWIPE)
-Write-Host "EXECUTE: Open App Drawer"
-# We cannot send mouse clicks via SendKeys easily.
-# BUT, we can try generic keys that trigger search/drawer.
-# Try: WinKey (often intercepted), Alt+Space, Ctrl+Esc.
-# BETTER IDEA: Use TAB to navigate to search bar if on pixel?
-# BEST GUESS ALTERNATIVE: Double Press Space usually does nothing, but...
-# Let's try sending META key via special scrcpy request? No, impossible in OTG.
-
-# We will try the "Type to Search" feature.
-# On many Launchers (Pixel/Samsung), typing on Home screen starts search.
-Write-Host "   -> Trying correct method: Typing directly on Home Screen..."
-
-# Go Home first
-$wshell.SendKeys("^{ESC}") 
-Start-Sleep 1
-$wshell.SendKeys("^{ESC}") 
-Start-Sleep 1
-
-# 5. AUTOMATED CONFIGURATION
-Write-Host "EXECUTE: Search and Enable"
-Write-Host "   -> Typing USB Debugging"
-$wshell.SendKeys("USB Debugging")
-Start-Sleep 2
-
-Write-Host "   -> Selecting first result (DOWN -> ENTER)"
-$wshell.SendKeys("{DOWN}")
+# Select and Enter
+Write-Host "   -> Entering Settings (Down -> Enter)"
+$wshell.SendKeys("{DOWN}") 
 Start-Sleep 1
 $wshell.SendKeys("{ENTER}")
 Start-Sleep 3
 
-Write-Host "   -> Toggling Switch (ENTER)"
+# --- STEP 4: ENABLE DEV OPTIONS ---
+Write-Host "EXECUTE: Enable Developer Options"
+Write-Host "   -> Scrolling to Bottom (End)"
+$wshell.SendKeys("{END}")
+Start-Sleep 1
+
+# Select About Phone
+Write-Host "   -> Selecting About Phone (Enter)"
 $wshell.SendKeys("{ENTER}")
 Start-Sleep 1
 
-Write-Host "   -> Handling Allow Popup (RIGHT -> ENTER)"
+# Find Build Number
+Write-Host "   -> Clicking Build Number 7 times"
+$wshell.SendKeys("{END}")
+for ($i = 1; $i -le 7; $i++) {
+    $wshell.SendKeys("{ENTER}")
+    Start-Sleep -Milliseconds 100
+}
+Start-Sleep 1
+
+# Go Back
+Write-Host "   -> Going Back"
+$wshell.SendKeys("{ESC}")
+Start-Sleep 1
+
+# --- STEP 5: ENABLE USB DEBUGGING ---
+Write-Host "EXECUTE: Enable USB Debugging"
+Write-Host "   -> finding System/Dev Options"
+$wshell.SendKeys("{END}")
+Start-Sleep 1
+$wshell.SendKeys("{UP}") 
+Start-Sleep 1
+$wshell.SendKeys("{ENTER}") 
+Start-Sleep 1
+
+# Toggle USB Debugging
+Write-Host "   -> Finding USB Toggle/Dev Options"
+$wshell.SendKeys("{END}")
+Start-Sleep 1
+$wshell.SendKeys("{ENTER}") # Enter Dev Options
+Start-Sleep 1
+
+Write-Host "   -> Finding Switch (Scroll Down)"
+for ($i = 1; $i -le 12; $i++) {
+    $wshell.SendKeys("{DOWN}")
+    Start-Sleep -Milliseconds 50
+}
+$wshell.SendKeys("{ENTER}") # Toggle
+Start-Sleep 2
+
+# Verify Popup
+Write-Host "   -> Confirming Popup (Right -> Enter)"
 $wshell.SendKeys("{RIGHT}")
-Start-Sleep 1
 $wshell.SendKeys("{ENTER}")
 
-# Backup attempt for popup
-Start-Sleep 1
-$wshell.SendKeys("{TAB}")
-Start-Sleep 1
-$wshell.SendKeys("{ENTER}")
-
-Write-Host "DONE. If you heard a USB Connect sound, it worked."
-Write-Host "Check RECOVERY_GUIDE.md for details on Resetting Drivers!"
+Write-Host "DONE. Check for USB Sound!"
 Start-Sleep 5

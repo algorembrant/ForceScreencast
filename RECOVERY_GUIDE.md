@@ -24,19 +24,19 @@ You must change your phone's USB driver for the "Blind" tool to work.
 
 ---
 
-## 🤖 PHASE 2: RUN THE AUTOMATION
-1.  Open the folder: `C:\Users\User\Desktop\VSCode\ForceScreencast`
-2.  **Edit Password**: Open `phone_password.txt` and make sure your PIN (`521452`) is correct. Save it.
-3.  Double-click **`run_macro.bat`**.
-
-**What happens next (Automated):**
-1.  The script launches.
-2.  It opens a black window (This is the "OTG" controller).
-3.  It **Automatically Unlocks** your phone using the PIN in the text file.
-
-**Did it work?**
-*   **Yes**: You usually hear a "USB Connected" sound (different from charging sound).
-*   **No**: Running it again? Make sure to close the black window first.
+## 🤖 PHASE 2: RUN THE AUTOMATION (Hybrid)
+1.  Double-click **`run_macro.bat`**.
+2.  **MANUAL PART**:
+    *   The script will launch the window and **PAUSE**.
+    *   **Unlock** your phone manually (Space, Swipe, Password).
+    *   **Open Settings** manually (Find the Gear icon and press Enter).
+3.  **AUTOMATED PART**:
+    *   Once you are inside Settings, click the script window and Press **ENTER**.
+    *   **Hands Off!** The script will:
+        *   Enable Developer Mode (build number clicks).
+        *   Find Developer Options.
+        *   Enable USB Debugging.
+        *   Accept the Popup.
 
 ---
 

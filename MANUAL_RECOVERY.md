@@ -1,66 +1,39 @@
 # 🕹️ Manual Android Recovery (Blind Mode)
 
-Use this guide if the **Automation Script** failed or if you prefer to control the process yourself manually.
+**Goal:** Manually navigate the phone using keyboard/mouse to enable USB Debugging.
 
-## 🛑 Step 1: Driver Setup (Mandatory)
-Just like the automated method, you MUST replace your phone's driver with **WinUSB** using [Zadig](https://zadig.akeo.ie/) for the keyboard/mouse to work.
-*   *Refer to Phase 1 in `RECOVERY_GUIDE.md` for these steps.*
-
-## 🚀 Step 2: Start Manual Control
-1.  Go to `C:\Users\User\Desktop\VSCode\ForceScreencast`
+## 🛑 Step 1: Pre-requisites
+1.  Ensure you have run **Zadig** and installed **WinUSB** driver (See Main Guide).
 2.  Double-click **`run_OTG.bat`**.
-3.  A black window will open.
-    *   **Note**: You will NOT see your screen. This window just forwards your keyboard/mouse clicks to the phone.
+3.  Focus on the black window.
 
-## 🧠 Step 3: Blind Navigation Tactics
-You are now "flying blind". Use these keyboard shortcuts to navigate.
+## 📝 Step 2: The Manual Steps
+Follow these steps exactly (as defined by user):
 
-### A. Waking & Unlocking
-1.  **Wake Up**: Press **Spacebar** twice (Wait 1 second).
-2.  **Unlock**:
-    *   **No PIN**: Swipe Up (Click and drag mouse up).
-    *   **PIN**: Type your PIN keys on your Numpad/Keyboard. Press **Enter**.
-    *   *Listen for the unlock sound.*
-
+1.  **Wake Up**: Press **Space** key.
+    *   *Wait a moment for screen to wake.*
+2.  **Unlock**: **Swipe Up** using the mouse.
+    *   *Click, Hold, Drag Up, Release.*
+3.  **Password**: Type the password setup numbers one by one (on Numpad or Top Row).
+4.  **Find Settings**:
 ### B. Finding Settings
-Method 1: **The Search Shortcut** (Best)
-1.  Press **Windows Key** (or `Ctrl+Esc`).
-    *   *This usually opens the App Drawer or Search.*
-2.  Type "USB Debugging".
-3.  Press **Down Arrow** once (to select first result).
+Method 1: **Swipe Up (App Drawer)**
+1.  **Swipe Up** with the mouse (Click, drag up, release).
+2.  Type "Settings".
+3.  Press **Down Arrow** once.
 4.  Press **Enter**.
 
-Method 2: **The Notification Shade**
-1.  Press **Win + N**.
-2.  Press **Right Arrow** repeatedly until you find the "Settings" gear (usually top-right).
-3.  Press **Enter**.
+Method 2: **Notification Shade**
+1.  Swipe **Down** from the top of the screen (Click, drag down).
+2.  Use Arrow Keys to find the "Settings" gear.
+3.  Press **Enter** when you think you have it selected.
+8.  **Enable Developer Options**:
+    *   (You usually need to scroll to bottom > About Phone > Build Number > Click 7 times).
+9.  **Toggle USB Debugging**:
+    *   (Find Developer Options > Scroll down > Toggle Switch > Confirm).
+    *   *Remember: Right Arrow -> Enter to click "Allow" on popup.*
 
-### C. Enabling Debugging (If Method 1 Worked)
-If you are inside the "Developer Options" menu:
-1.  **Toggle Switch**: Press **Enter** (to flip the switch you landed on).
-2.  **Authorize**:
-    *   A popup says "Allow USB Debugging?".
-    *   Press **Right Arrow** (focus "Allow").
-    *   Press **Enter**.
-
-### D. Enabling Debugging (The Hard Way - From Scratch)
-If you can't find it via search:
-1.  Navigate to **Settings**.
-2.  Scroll to bottom (Press **End** key).
-3.  Go to **About Phone** (Up Arrow x1 -> Enter).
-4.  Find **Build Number** (End Key -> Enter x7 times).
-    *   *You are now a developer!*
-5.  Go Back (**Esc**).
-6.  Find **System > Developer Options**.
-7.  Scroll down to **USB Debugging** (Down Arrow x10 approx).
-8.  Press **Enter**.
-9.  Press **Right Arrow** -> **Enter** (to Allow).
-
-## 🔊 Step 4: Verification
-*   **Success**: You hear the Windows "USB Device Connected" sound (distinct from charging sound).
-*   **Failure**: Silence. Close the window and try again.
-
-## 🏁 Step 5: Finish
+## 🏁 Step 3: Finish
 Once verified:
 1.  **Reset Drivers** (Uninstall device in Device Manager).
 2.  Run **`run_screencast.bat`**.
